@@ -51,14 +51,14 @@ namespace MobileCraftShop.Models
         public bool IsBestseller { get; set; } = false;
         public bool IsActive { get; set; } = true;
 
-        // Foreign Keys
+        // Внешние ключи
         [Display(Name = "Category")]
         public int CategoryId { get; set; }
 
         [Display(Name = "Brand")]
         public int BrandId { get; set; }
 
-        // Navigation Properties
+        // Свойства навигации
         [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; } = null!;
 
@@ -77,7 +77,7 @@ namespace MobileCraftShop.Models
         [DataType(DataType.DateTime)]
         public DateTime? UpdatedAt { get; set; }
 
-        // Computed Properties
+        //Вычисляемые свойства
         [Display(Name = "Average Rating")]
         public double AverageRating => Reviews.Any() ? Reviews.Average(r => r.Rating) : 0;
 
