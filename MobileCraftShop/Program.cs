@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MobileCraftShop.Data;
 using MobileCraftShop.Models;
+using MobileCraftShop.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,10 @@ builder.Services.AddSession(options =>
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
+
+// Register Custom Services for Dependency Injection
+builder.Services.AddScoped<IProductService, MobileCraftShop.Services.ProductService>();
+
 
 var app = builder.Build();
 
