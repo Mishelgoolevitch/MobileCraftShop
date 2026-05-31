@@ -25,7 +25,7 @@ namespace MobileCraftShop.Models
         [Display(Name = "Display Order")]
         public int DisplayOrder { get; set; }
 
-        // Foreign Key
+        // Внешний ключ
         [Display(Name = "Product")]
         public int ProductId { get; set; }
 

@@ -17,15 +17,15 @@ namespace MobileCraftShop.Models
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        // Foreign Key
+        // Внешний ключ
         [Display(Name = "Product")]
         public int ProductId { get; set; }
 
-        // Navigation Properties
+        // Свойства навигации
         [ForeignKey("ProductId")]
         public virtual Product Product { get; set; } = null!;
 
-        // Computed Properties
+        // Вычисляемые свойства
         [Column(TypeName = "decimal(18,2)")]
         public decimal TotalPrice => Product != null ? Product.SalePrice * Quantity : 0;
     }

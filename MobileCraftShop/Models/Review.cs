@@ -21,14 +21,14 @@ namespace MobileCraftShop.Models
         public bool IsVerifiedPurchase { get; set; } = false;
         public bool IsApproved { get; set; } = false;
 
-        // Foreign Keys
+        // Внешние ключи
         [Display(Name = "Product")]
         public int ProductId { get; set; }
 
         [Display(Name = "User")]
         public string UserId { get; set; } = string.Empty;
 
-        // Navigation Properties
+        // Свойства навигации
         [ForeignKey("ProductId")]
         public virtual Product Product { get; set; } = null!;
 

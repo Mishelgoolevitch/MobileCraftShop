@@ -45,7 +45,7 @@ namespace MobileCraftShop.Models
 
         public bool IsActive { get; set; } = true;
 
-        // Navigation Properties
+        // Свойства навигации
         public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
         public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
         public virtual ICollection<WishlistItem> WishlistItems { get; set; } = new List<WishlistItem>();

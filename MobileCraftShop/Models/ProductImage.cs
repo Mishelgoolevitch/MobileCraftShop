@@ -22,7 +22,7 @@ namespace MobileCraftShop.Models
         [Display(Name = "Is Main Image")]
         public bool IsMainImage { get; set; } = false;
 
-        // Foreign Key
+        // Внешний ключ
         [Display(Name = "Product")]
         public int ProductId { get; set; }
 

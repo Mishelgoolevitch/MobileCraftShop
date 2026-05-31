@@ -11,14 +11,14 @@ namespace MobileCraftShop.Models
         [DataType(DataType.DateTime)]
         public DateTime AddedAt { get; set; } = DateTime.Now;
 
-        // Foreign Keys
+        // Внешние ключи
         [Display(Name = "Product")]
         public int ProductId { get; set; }
 
         [Display(Name = "User")]
         public string UserId { get; set; } = string.Empty;
 
-        // Navigation Properties
+        // Свойства навигации
         [ForeignKey("ProductId")]
         public virtual Product Product { get; set; } = null!;
 

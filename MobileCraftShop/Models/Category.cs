@@ -28,7 +28,7 @@ namespace MobileCraftShop.Models
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        // Navigation Properties
+        // Свойства навигации
         public virtual ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }

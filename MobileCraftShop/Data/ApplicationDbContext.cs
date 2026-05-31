@@ -26,7 +26,7 @@ namespace MobileCraftShop.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure relationships and constraints
+            // Настройка связей и ограничений
             modelBuilder.Entity<Product>(entity =>
             {
                 entity.HasOne(p => p.Category)
@@ -63,13 +63,13 @@ namespace MobileCraftShop.Data
                 entity.HasIndex(sci => sci.CartId);
             });
 
-            // Seed initial data
+            // Исходные данные для записи
             SeedData(modelBuilder);
         }
 
         private void SeedData(ModelBuilder modelBuilder)
         {
-            // Seed Categories
+            // Категории записей
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Smartphones", Description = "Latest smartphones from top brands", DisplayOrder = 1, ImageUrl = "/images/categories/smartphones.jpg" },
                 new Category { Id = 2, Name = "Feature Phones", Description = "Basic phones with essential features", DisplayOrder = 2, ImageUrl = "/images/categories/feature-phones.jpg" },
@@ -77,7 +77,7 @@ namespace MobileCraftShop.Data
                 new Category { Id = 4, Name = "Tablets", Description = "Tablets and iPads", DisplayOrder = 4, ImageUrl = "/images/categories/tablets.jpg" }
             );
 
-            // Seed Brands
+            // Бренды записей
             modelBuilder.Entity<Brand>().HasData(
                 new Brand { Id = 1, Name = "Apple", Description = "Premium smartphones and devices", Country = "USA", WebsiteUrl = "https://www.apple.com" },
                 new Brand { Id = 2, Name = "Samsung", Description = "Innovative technology solutions", Country = "South Korea", WebsiteUrl = "https://www.samsung.com" },

@@ -76,7 +76,7 @@ namespace MobileCraftShop.Models
         [Display(Name = "Transaction ID")]
         public string? TransactionId { get; set; }
 
-        // Shipping Address
+        // Адрес доставки
         [Required]
         [StringLength(200)]
         [Display(Name = "Shipping Address")]
@@ -115,14 +115,14 @@ namespace MobileCraftShop.Models
         [Display(Name = "Delivered Date")]
         public DateTime? DeliveredDate { get; set; }
 
-        // Foreign Key
+        // Внешний ключ
         [Display(Name = "Customer")]
         public string? UserId { get; set; }
 
         [ForeignKey("UserId")]
         public virtual ApplicationUser? User { get; set; }
 
-        // Navigation Properties
+        // Свойства навигации
         public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
         private static string GenerateOrderNumber()

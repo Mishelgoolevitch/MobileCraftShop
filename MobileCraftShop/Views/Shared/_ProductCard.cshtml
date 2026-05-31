@@ -31,7 +31,7 @@
             </a>
         </h6>
 
-        <!-- Star Rating Section -->
+        <!-- Раздел "Рейтинг звезд" -->
         <div class="mb-2">
             @if (Model.AverageRating > 0)
             {
@@ -74,7 +74,7 @@
                 </form>
             </div>
 
-            <!-- Stock Alerts -->
+            <!-- Оповещения о запасах -->
             @if (Model.StockQuantity <= 5 && Model.StockQuantity > 0)
             {
                 <small class="text-warning"><i class="bi bi-exclamation-circle"></i> Only @Model.StockQuantity left</small>
