@@ -46,10 +46,10 @@
                     <ul class="navbar-nav">
                         <!-- Корзина -->
                         <li class="nav-item">
-                            <a class="nav-link position-relative">
+                            <a class="nav-link position-relative" asp-controller="ShoppingCart" asp-action="Index">
                                 <i class="bi bi-cart3 fs-5"></i>
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount">
-                                    0
+                                    @(ViewBag.CartItemCount ?? 0)
                                 </span>
                             </a>
                         </li>

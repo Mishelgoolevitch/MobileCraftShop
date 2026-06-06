@@ -33,6 +33,9 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("CustomerOnly", policy => policy.RequireRole("Customer"));
 });
 
+// 1. Add HttpContextAccessor to access Session inside the Service layer
+builder.Services.AddHttpContextAccessor();
+
 // Session & Shopping Cart
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -47,6 +50,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 // Register Custom Services for Dependency Injection
 builder.Services.AddScoped<IProductService, MobileCraftShop.Services.ProductService>();
+builder.Services.AddScoped<IShoppingCartService, MobileCraftShop.Services.ShoppingCartService>();
 
 
 var app = builder.Build();

@@ -66,7 +66,7 @@
                     <h5 class="text-primary mb-0"> @Model.SalePrice.ToString("N0") рублей</h5>
                 </div>
 
-                <form asp-controller="#" asp-action="#" method="post" class="d-inline">
+                <form asp-controller="ShoppingCart" asp-action="AddToCart" method="post" class="d-inline">
                     <input type="hidden" name="productId" value="@Model.Id" />
                     <button type="submit" class="btn btn-primary btn-sm" @(Model.StockQuantity <= 0 ? "disabled" : "")>
                         <i class="bi bi-cart-plus"></i> Add

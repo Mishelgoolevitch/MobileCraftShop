@@ -7,11 +7,13 @@ namespace MobileCraftShop.Controllers
     public class ProductsController : Controller
     {
         private readonly IProductService _productService;
+        private readonly IShoppingCartService _cartService;
 
         // Внедрение продукта сервиса через конструктор
-        public ProductsController(IProductService productService)
+        public ProductsController(IProductService productService, IShoppingCartService cartService)
         {
             _productService = productService;
+            _cartService = cartService;
         }
 
         /// <summary>
@@ -40,7 +42,7 @@ namespace MobileCraftShop.Controllers
 
             // Вызов службы для обработки логики фильтрации
             var result = await _productService.GetProductsAsync(filter);
-
+            ViewBag.CartItemCount = await _cartService.GetCartItemCountAsync();
             return View(result);
         }
 
@@ -71,7 +73,7 @@ namespace MobileCraftShop.Controllers
                 RelatedProducts = relatedProducts,
                 IsInWishlist = isInWishlist
             };
-
+            ViewBag.CartItemCount = await _cartService.GetCartItemCountAsync();
             return View(viewModel);
         }
     }

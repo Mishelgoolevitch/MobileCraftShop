@@ -8,12 +8,14 @@ namespace MobileCraftShop.Controllers
     public class HomeController : Controller
     {
         private readonly IProductService _productService;
+        private readonly IShoppingCartService _cartService;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(IProductService productService, ILogger<HomeController> logger)
+        public HomeController(IProductService productService, ILogger<HomeController> logger, IShoppingCartService cartService)
         {
             _productService = productService;
             _logger = logger;
+            _cartService = cartService;
         }
 
         public async Task<IActionResult> Index()
@@ -25,6 +27,7 @@ namespace MobileCraftShop.Controllers
                 Bestsellers = await _productService.GetBestsellersAsync(8),
                 Brands = await _productService.GetBrandsAsync(6)
             };
+            ViewBag.CartItemCount = await _cartService.GetCartItemCountAsync();
             return View(viewModel);
         }
 

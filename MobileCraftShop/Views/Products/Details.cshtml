@@ -106,6 +106,8 @@
 
                 <!-- Настройка кнопки добавить в корзину -->
                 <div class="d-flex gap-3 mb-4">
+                <form asp-controller="ShoppingCart" asp-action="AddToCart" method="post" class="d-flex align-items-center gap-2">
+                        <input type="hidden" name="productId" value="@Model.Product.Id" />
                     <div class="input-group" style="width: 130px;">
                         <button type="button" class="btn btn-outline-secondary" onclick="this.parentNode.querySelector('input').stepDown()">
                             <i class="bi bi-dash"></i>
@@ -118,6 +120,7 @@
                     <button type="submit" class="btn btn-primary btn-lg" @(Model.Product.StockQuantity <= 0 ? "disabled" : "")>
                         <i class="bi bi-cart-plus"></i> Add to Cart
                     </button>
+                 </form>
                 </div>
 
                 <!-- Отзывы о ключевых характеристиках -->
