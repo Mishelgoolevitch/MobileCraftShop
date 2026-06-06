@@ -61,9 +61,9 @@
                 <div>
                     @if (Model.OriginalPrice > Model.SalePrice)
                     {
-                        <del class="text-muted small">RS @Model.OriginalPrice.ToString("N0")</del>
+                        <del class="text-muted small"> @Model.OriginalPrice.ToString("N0") рублей</del>
                     }
-                    <h5 class="text-primary mb-0">RS @Model.SalePrice.ToString("N0")</h5>
+                    <h5 class="text-primary mb-0"> @Model.SalePrice.ToString("N0") рублей</h5>
                 </div>
 
                 <form asp-controller="#" asp-action="#" method="post" class="d-inline">
