@@ -136,6 +136,7 @@ namespace MobileCraftShop.Services
                 .Include(p => p.Reviews)
                     .ThenInclude(r => r.User) // Глубокая загрузка пользователя, написавшего отзыв
                 .FirstOrDefaultAsync(p => p.Id == id && p.IsActive);
+
         }
 
 

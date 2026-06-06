@@ -5,7 +5,7 @@
 }
 
 <div class="container py-4">
-    <!-- Breadcrumb -->
+    <!-- Название продукта -->
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
@@ -15,7 +15,7 @@
     </nav>
 
     <div class="row">
-        <!-- Product Images -->
+        <!-- Изображение продукта -->
         <div class="col-lg-5">
             <div class="card shadow-sm">
                 <img src="@(Model.Product.MainImageUrl ?? "https://via.placeholder.com/500x500?text=No+Image")"
@@ -39,14 +39,14 @@
             </div>
         </div>
 
-        <!-- Product Info -->
+        <!-- Информация о продукте -->
         <div class="col-lg-7">
             <div class="ps-lg-4">
                 <p class="text-muted mb-1">@Model.Product.Brand?.Name</p>
                 <h2>@Model.Product.Name</h2>
                 <p class="text-muted">@Model.Product.Model</p>
 
-                <!-- Rating -->
+                <!-- Рейтинг -->
                 <div class="mb-3">
                     @if (Model.Product.AverageRating > 0)
                     {
@@ -75,7 +75,7 @@
                     }
                 </div>
 
-                <!-- Price -->
+                <!-- Цена -->
                 <div class="mb-3">
                     @if (Model.Product.OriginalPrice > Model.Product.SalePrice)
                     {
@@ -85,10 +85,10 @@
                     <h3 class="text-primary">RS @Model.Product.SalePrice.ToString("N0")</h3>
                 </div>
 
-                <!-- Short Description -->
+                <!-- Короткое описание -->
                 <p class="lead">@Model.Product.ShortDescription</p>
 
-                <!-- Stock Status -->
+                <!-- Статус товара на складе -->
                 <div class="mb-3">
                     @if (Model.Product.StockQuantity > 10)
                     {
@@ -104,7 +104,7 @@
                     }
                 </div>
 
-                <!-- Add to Cart -->
+                <!-- Настройка кнопки добавить в корзину -->
                 <div class="d-flex gap-3 mb-4">
                     <div class="input-group" style="width: 130px;">
                         <button type="button" class="btn btn-outline-secondary" onclick="this.parentNode.querySelector('input').stepDown()">
@@ -120,7 +120,7 @@
                     </button>
                 </div>
 
-                <!-- Key Specs Preview -->
+                <!-- Отзывы о ключевых характеристиках -->
                 <div class="card bg-light">
                     <div class="card-body">
                         <h6>Key Specifications</h6>
@@ -139,7 +139,7 @@
         </div>
     </div>
 
-    <!-- Product Details Tabs -->
+    <!-- Вкладка с описанием товара -->
     <div class="row mt-5">
         <div class="col-12">
             <ul class="nav nav-tabs" role="tablist">
@@ -157,12 +157,12 @@
             </ul>
 
             <div class="tab-content p-4 border border-top-0 rounded-bottom">
-                <!-- Description -->
+                <!-- Описание -->
                 <div class="tab-pane fade show active" id="description">
                     <p>@Html.Raw(Model.Product.Description?.Replace("\n", "<br/>"))</p>
                 </div>
 
-                <!-- Specifications -->
+                <!-- Характеристики -->
                 <div class="tab-pane fade" id="specifications">
                     @if (Model.Product.Specifications.Any())
                     {
@@ -188,7 +188,7 @@
         </div>
     </div>
 
-    <!-- Related Products -->
+    <!-- Сопутствующие товары -->
     @if (Model.RelatedProducts.Any())
     {
         <div class="row mt-5">
