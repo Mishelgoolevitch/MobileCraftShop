@@ -46,6 +46,31 @@ namespace MobileCraftShop.Controllers
             return View(result);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Search(string term)
+        {
+            if (string.IsNullOrWhiteSpace(term) || term.Length < 2)
+                return Json(new List<object>());
+
+            var filter = new ProductListViewModel
+            {
+                SearchTerm = term,
+                PageSize = 5
+            };
+
+            var result = await _productService.GetProductsAsync(filter);
+            var suggestions = result.Products.Select(p => new
+            {
+                id = p.Id,
+                name = p.Name,
+                price = p.SalePrice,
+                image = p.MainImageUrl,
+                brand = p.Brand?.Name
+            });
+
+            return Json(suggestions);
+        }
+
         /// <summary>
         /// Отображает подробную информацию о конкретном продукте
         /// </summary>
