@@ -7,8 +7,16 @@ namespace MobileCraftShop.Services
 {
     public interface IProductService
     {
-        // Asynchronously gets a filtered, sorted, and paginated list of products
+        // Асинхронно получает отфильтрованный, отсортированный и разбитый на страницы список продуктов
         Task<ProductListViewModel> GetProductsAsync(ProductListViewModel filter);
+
+        // Выбирает один продукт по его первичному ключу
+        Task<Product?> GetProductByIdAsync(int id);
+
+        // Выводит список похожих товаров в зависимости от категории или бренда
+        // По умолчанию для стандартной строки пользовательского интерфейса установлено значение 4
+        Task<List<Product>> GetRelatedProductsAsync(int productId, int count = 4);
+
         Task<List<Product>> GetFeaturedProductsAsync(int count = 8);
         Task<List<Product>> GetNewArrivalsAsync(int count = 8);
         Task<List<Product>> GetBestsellersAsync(int count = 8);
@@ -60,6 +68,7 @@ namespace MobileCraftShop.Services
                  .ToListAsync();
         }
 
+       
         public async Task<ProductListViewModel> GetProductsAsync(ProductListViewModel filter)
         {
             // 1. Инициализировать запрос связанными данными
@@ -114,6 +123,39 @@ namespace MobileCraftShop.Services
             filter.Brands = await _context.Brands.Where(b => b.IsActive).ToListAsync();
 
             return filter;
+        }
+
+        public async Task<Product?> GetProductByIdAsync(int id)
+        {
+            // Извлекает продукт со всеми связанными с ним деталями
+            return await _context.Products
+                .Include(p => p.Brand)
+                .Include(p => p.Category)
+                .Include(p => p.ProductImages)
+                .Include(p => p.Specifications)
+                .Include(p => p.Reviews)
+                    .ThenInclude(r => r.User) // Глубокая загрузка пользователя, написавшего отзыв
+                .FirstOrDefaultAsync(p => p.Id == id && p.IsActive);
+        }
+
+
+        public async Task<List<Product>> GetRelatedProductsAsync(int productId, int count = 4)
+        {
+            // 1. Выберите базовый продукт, чтобы узнать его марку и категорию
+            var product = await _context.Products.FindAsync(productId);
+
+            // Возвращает пустой список, если продукт не существует
+            if (product == null) return new List<Product>();
+
+            // 2. Запросите похожие продукты
+            return await _context.Products
+                .Include(p => p.Brand)
+                .Where(p => p.Id != productId &&      // Исключить текущий продукт
+                            (p.BrandId == product.BrandId || p.CategoryId == product.CategoryId) &&
+                            p.IsActive)               // Показывать только активные элементы
+                .OrderBy(x => Guid.NewGuid())        // Необязательно: Рандомизируйте результаты
+                .Take(count)                          // Ограничьте результирующий набор
+                .ToListAsync();
         }
     }
 }
