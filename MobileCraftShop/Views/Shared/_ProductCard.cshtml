@@ -18,7 +18,7 @@
         }
 
         <button class="btn btn-light btn-sm position-absolute bottom-0 end-0 m-2 wishlist-btn"
-                data-product-id="@Model.Id">
+                data-product-id="@Model.Id" onclick="addToWishlist(@Model.Id)">
             <i class="bi bi-heart"></i>
         </button>
     </div>

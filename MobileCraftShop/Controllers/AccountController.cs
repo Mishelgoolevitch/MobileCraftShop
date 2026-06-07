@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MobileCraftShop.Data;
 using MobileCraftShop.Models;
 using MobileCraftShop.Services;
@@ -81,6 +82,8 @@ namespace MobileCraftShop.Controllers
 
             return View(model);
         }
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -206,6 +209,52 @@ namespace MobileCraftShop.Controllers
 
             ViewBag.CartItemCount = await _cartService.GetCartItemCountAsync();
             return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AddToWishlist(int productId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Unauthorized();
+
+            var checkwishlist = _context.WishlistItems.Where(w => w.ProductId == productId && w.UserId == user.Id).FirstOrDefault();
+            if (checkwishlist == null)
+            {
+                if (!user.WishlistItems.Any(w => w.ProductId == productId))
+                {
+                    user.WishlistItems.Add(new WishlistItem
+                    {
+                        ProductId = productId,
+                        UserId = user.Id
+                    });
+                    await _userManager.UpdateAsync(user);
+                }
+                return Json(new { success = true, message = "Added to wishlist!" });
+            }
+            return Json(new { success = true, message = "Already Added!" });
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Wishlist()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
+
+            var wishlistItems = await _context.WishlistItems
+                .Include(w => w.Product)
+                    .ThenInclude(p => p.Brand)
+                .Include(w => w.Product)
+                    .ThenInclude(p => p.Reviews)
+                .Where(w => w.UserId == user.Id)
+                .OrderByDescending(w => w.AddedAt)
+                .ToListAsync();
+
+            ViewBag.CartItemCount = await _cartService.GetCartItemCountAsync();
+            return View(wishlistItems);
         }
 
         [HttpGet]
