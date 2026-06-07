@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
+namespace MobileCraftShop.ViewModels 
+{ 
 public class RegisterViewModel
 {
     [Required(ErrorMessage = "First name is required")]
@@ -32,4 +33,5 @@ public class RegisterViewModel
     [Display(Name = "Confirm password")]
     [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
     public string ConfirmPassword { get; set; } = string.Empty;
+}
 }
