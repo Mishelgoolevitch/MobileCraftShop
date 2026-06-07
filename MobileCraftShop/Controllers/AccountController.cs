@@ -238,5 +238,12 @@ namespace MobileCraftShop.Controllers
             TempData["Success"] = "If your email is registered, you will receive password reset instructions.";
             return RedirectToAction(nameof(Login));
         }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
     }
 }
