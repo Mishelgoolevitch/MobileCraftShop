@@ -12,7 +12,7 @@
                     <a asp-action="Profile" class="list-group-item list-group-item-action">
                         <i class="bi bi-person"></i> Profile
                     </a>
-                    <a asp-action="Orders" class="list-group-item list-group-item-action">
+                    <a class="list-group-item list-group-item-action">
                         <i class="bi bi-bag"></i> My Orders
                     </a>
                     <a asp-action="Wishlist" class="list-group-item list-group-item-action active">
@@ -55,11 +55,15 @@
                                                 <img src="@(item.Product?.MainImageUrl ?? "https://via.placeholder.com/300x300?text=No+Image")"
                                                      class="card-img-top" alt="@item.Product?.Name" style="height: 200px; object-fit: cover;" />
                                             </a>
+                                            <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2"
+                                                    onclick="removeFromWishlist(@item.ProductId)">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
                                         </div>
                                         <div class="card-body">
                                             <p class="text-muted mb-1 small">@item.Product?.Brand?.Name</p>
                                             <h6 class="card-title">@item.Product?.Name</h6>
-                                            <h5 class="text-primary">RS @item.Product?.SalePrice.ToString("N0")</h5>
+                                            <h5 class="text-primary">BY @item.Product?.SalePrice.ToString("N0")</h5>
                                             <form asp-controller="ShoppingCart" asp-action="AddToCart" method="post">
                                                 <input type="hidden" name="productId" value="@item.ProductId" />
                                                 <button type="submit" class="btn btn-primary w-100" @(item.Product?.StockQuantity <= 0 ? "disabled" : "")>
@@ -77,3 +81,17 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function removeFromWishlist(productId) {
+            if (confirm('Remove from wishlist?')) {
+                $.post('@Url.Action("RemoveFromWishlist", "Account")', { productId: productId }, function (data) {
+                    if (data.success) {
+                        location.reload();
+                    }
+                });
+            }
+        }
+    </script>
+}
