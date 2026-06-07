@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using MobileCraftShop.Models;
 using MobileCraftShop.Services;
 using MobileCraftShop.ViewModels;
 
@@ -6,14 +9,16 @@ namespace MobileCraftShop.Controllers
 {
     public class ProductsController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IProductService _productService;
         private readonly IShoppingCartService _cartService;
 
         // Внедрение продукта сервиса через конструктор
-        public ProductsController(IProductService productService, IShoppingCartService cartService)
+        public ProductsController(IProductService productService, IShoppingCartService cartService, UserManager<ApplicationUser> userManager)
         {
             _productService = productService;
             _cartService = cartService;
+            _userManager= userManager;
         }
 
         /// <summary>
@@ -91,6 +96,12 @@ namespace MobileCraftShop.Controllers
             // 4. Заполнитель для логики списка желаний (может быть расширен позже)
             bool isInWishlist = false;
 
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                isInWishlist = user?.WishlistItems.Any(w => w.ProductId == id) ?? false;
+            }
+
             // 5. Создайте ViewModel
             var viewModel = new ProductDetailViewModel
             {
@@ -100,6 +111,35 @@ namespace MobileCraftShop.Controllers
             };
             ViewBag.CartItemCount = await _cartService.GetCartItemCountAsync();
             return View(viewModel);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AddReview(int productId, ReviewViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "Please fill in all required fields.";
+                return RedirectToAction(nameof(Details), new { id = productId });
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var result = await _productService.AddReviewAsync(productId, user.Id, model);
+            if (result)
+            {
+                TempData["Success"] = "Thank you for your review!";
+            }
+            else
+            {
+                TempData["Error"] = "Failed to add review. Please try again.";
+            }
+
+            return RedirectToAction(nameof(Details), new { id = productId });
         }
     }
 }

@@ -21,6 +21,7 @@ namespace MobileCraftShop.Services
         Task<List<Product>> GetNewArrivalsAsync(int count = 8);
         Task<List<Product>> GetBestsellersAsync(int count = 8);
         Task<List<Brand>> GetBrandsAsync(int count = 6);
+        Task<bool> AddReviewAsync(int productId, string userId, ReviewViewModel review);
     }
 
     public class ProductService : IProductService
@@ -158,5 +159,27 @@ namespace MobileCraftShop.Services
                 .Take(count)                          // Ограничьте результирующий набор
                 .ToListAsync();
         }
+
+        public async Task<bool> AddReviewAsync(int productId, string userId, ReviewViewModel review)
+        
+        {
+            var product = await _context.Products.FindAsync(productId);
+            if (product == null) return false;
+
+            var newReview = new Review
+            {
+                ProductId = productId,
+                UserId = userId,
+                Rating = review.Rating,
+                Title = review.Title,
+                Comment = review.Comment,
+                IsApproved = true // Auto-approve for now
+            };
+
+            _context.Reviews.Add(newReview);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
-}
+    }
+
