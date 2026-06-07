@@ -51,6 +51,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 // Register Custom Services for Dependency Injection
 builder.Services.AddScoped<IProductService, MobileCraftShop.Services.ProductService>();
 builder.Services.AddScoped<IShoppingCartService, MobileCraftShop.Services.ShoppingCartService>();
+builder.Services.AddScoped<IFileService, MobileCraftShop.Services.FileService>();
 
 
 var app = builder.Build();

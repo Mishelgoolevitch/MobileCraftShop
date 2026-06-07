@@ -16,19 +16,22 @@ namespace MobileCraftShop.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _context;  // ADD THIS
         private readonly IShoppingCartService _cartService;
+        private readonly IFileService _fileService;
 
         public AccountController(
            UserManager<ApplicationUser> userManager,
            SignInManager<ApplicationUser> signInManager,
            RoleManager<IdentityRole> roleManager,
            ApplicationDbContext context,  // ADD THIS PARAMETER)
-           IShoppingCartService cartService)
+           IShoppingCartService cartService,
+           IFileService fileService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _context = context;  // ADD THIS
             _cartService = cartService;
+            _fileService = fileService;
         }
         [HttpGet]
         [AllowAnonymous]
@@ -152,6 +155,88 @@ namespace MobileCraftShop.Controllers
 
             ViewBag.CartItemCount = await _cartService.GetCartItemCountAsync();
             return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Profile(ProfileViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.CartItemCount = await _cartService.GetCartItemCountAsync();
+                return View(model);
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
+
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.PhoneNumber = model.PhoneNumber;
+            user.DateOfBirth = model.DateOfBirth;
+            user.Address = model.Address;
+            user.City = model.City;
+            user.PostalCode = model.PostalCode;
+            user.Country = model.Country;
+
+            if (model.ProfileImage != null)
+            {
+                var imagePath = await _fileService.SaveFileAsync(model.ProfileImage, "images/profiles");
+                if (!string.IsNullOrEmpty(imagePath))
+                {
+                    if (!string.IsNullOrEmpty(user.ProfileImageUrl))
+                        _fileService.DeleteFile(user.ProfileImageUrl);
+                    user.ProfileImageUrl = imagePath;
+                }
+            }
+
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                TempData["Success"] = "Profile updated successfully.";
+                return RedirectToAction(nameof(Profile));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            ViewBag.CartItemCount = await _cartService.GetCartItemCountAsync();
+            return View(model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                TempData["Success"] = "If your email is registered, you will receive password reset instructions.";
+                return RedirectToAction(nameof(Login));
+            }
+
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: Request.Scheme);
+
+            // TODO: Send email with reset link
+
+            TempData["Success"] = "If your email is registered, you will receive password reset instructions.";
+            return RedirectToAction(nameof(Login));
         }
     }
 }

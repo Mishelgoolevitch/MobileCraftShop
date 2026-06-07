@@ -94,4 +94,14 @@ public class RegisterViewModel
 
         public string? ProfileImageUrl { get; set; }
     }
+
+    public class ForgotPasswordViewModel
+    {
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; } = string.Empty;
+    }
+
+
 }
